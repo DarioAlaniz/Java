@@ -45,7 +45,9 @@ public class Receta {
      * @param ingrediente El ingrediente a agregar.
      */
     public void addIngrediente(String ingrediente) {
-        this.ingredientes.add(ingrediente);
+        if(!isCerrada()){
+            this.ingredientes.add(ingrediente);
+        }
     }
 
     /**

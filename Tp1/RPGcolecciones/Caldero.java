@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * La clase caldero modela un recipiente para preparar pocimas.
@@ -61,7 +62,13 @@ public class Caldero {
      * @param receta La receta a incorporar.
      */
     public void setReceta (Receta receta) {
-        // TODO - Implementar metodo
+        if(receta !=null && receta.getCantidadIngredientes()<=getCapacidad() && getReceta()==null && getPocima()==null){
+            this.receta = receta;
+            for(String ingrediente : this.receta.getIngredientes()){
+                elementos.put(ingrediente, null);
+            }
+        }
+        else System.out.println(getNombre()+": "+"No se puede agregar "+receta.getNombre());
 
     }
 
@@ -76,8 +83,10 @@ public class Caldero {
      * @param ingrediente El ingrediente a incorporar al caldero.
      */
     public void addIngrediente (Elemento ingrediente) {
-        // TODO - Implementar metodo
-
+        String clave = ingrediente.getNombre();
+        if(getIngredientes().containsKey(clave)){
+            getIngredientes().put(clave, ingrediente);
+        }
     }
 
     /**
@@ -92,8 +101,13 @@ public class Caldero {
      * @return La lista con los nombres de los ingredientes faltantes.
      */
     public List<String> getIngredientesFaltantes () {
-        // TODO - Implementar metodo
-        return null;
+        List<String> ingredientesFaltantes = new ArrayList<>();
+        for (String clave: getIngredientes().keySet()){
+            if(getIngredientes().get(clave) == null){
+                ingredientesFaltantes.add(clave);
+            }
+        }
+        return ingredientesFaltantes;
     }
 
     /**
@@ -103,8 +117,10 @@ public class Caldero {
      *         false si falta al menos uno.
      */
     public Boolean verificarIngredientes () {
-        // TODO - Implementar metodo
-        return null;
+        if(getIngredientesFaltantes().size()>0){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -126,7 +142,16 @@ public class Caldero {
      * donde <nombre> es el nombre del caldero 
      */
     public void prepararPocima () {
-        // TODO - Implementar metodo
+        if(getReceta()!=null && verificarIngredientes()){
+            Integer peso=0;
+            for (String clave: getIngredientes().keySet()){
+                peso += getIngredientes().get(clave).getPeso();
+            }
+            pocima = new Elemento(getReceta().getNombre(), peso);
+            receta = null;
+            getIngredientes().clear();
+        }
+        else System.out.println(getNombre() + ": No se puede preparar la pocima");
 
     }
 
@@ -136,8 +161,9 @@ public class Caldero {
      * @return La pocima preparada.
      */
     public Elemento getPocima() {
-        // TODO - Implementar metodo
-        return null;
+        Elemento back_pocima = pocima; 
+        pocima = null;
+        return back_pocima;
     }
 
     /**
@@ -159,8 +185,17 @@ public class Caldero {
      */
     @Override
     public String toString() {
-        // TODO - Implementar metodo
-        return null;
+        String cadena = getNombre()+" mediano"+": ";
+        if(getReceta()!=null && pocima==null){
+            cadena += "Receta " + getReceta().getNombre();
+        }
+        else if(getReceta()==null && pocima!=null){
+            cadena += "Pocima de Receta " + pocima.getNombre();
+        }
+        else cadena += "vacio";
+        
+        return cadena; 
+        
     }
 
     /**
