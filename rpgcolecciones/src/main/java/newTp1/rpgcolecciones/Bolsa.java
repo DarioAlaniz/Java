@@ -1,5 +1,6 @@
 package newTp1.rpgcolecciones;
 
+import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,8 +32,11 @@ public class Bolsa {
      * @param peso El peso maximo que puede contener la bolsa
      */
     public Bolsa (String nombre, int peso) {
-        // TODO - Implementar metodo
-        PESO_MAXIMO = 0; // Ojo, esta linea no es valida
+        if(nombre !=""){
+            this.nombre = nombre;
+        }
+        PESO_MAXIMO = peso;
+        porNombre = new TreeMap<String, Elemento>();
     }
 
     /**
@@ -53,8 +57,13 @@ public class Bolsa {
      * @param obj El elemento a agregar en la bolsa.
      */
     public void addElemento (Elemento obj) {
-        // TODO - Implementar metodo
-
+        if(obj.getPeso()>getPesoMaximo() | porNombre.containsKey(obj.getNombre()) | obj.getPeso() > getPesoLibre()){
+            System.out.println(getNombre()+": "+"No se puede agregar"+obj);
+        }
+        else{
+            porNombre.put(obj.getNombre(), obj);
+            addPeso(obj.getPeso());
+        }
     }
 
     /**
@@ -65,7 +74,11 @@ public class Bolsa {
      * @return el elemento eliminado, o null si no existe ese elemento a remover
      */
     public Elemento delElemento (String nombre) {
-        // TODO - Implementar metodo
+        if(nombre!=""){
+            Elemento removido = porNombre.remove(nombre);
+            addPeso(-removido.getPeso());
+            return removido;
+        }
         return null;
     }
 
@@ -75,8 +88,11 @@ public class Bolsa {
      * @return ArrayList<Elemento> lista con los elementos de la bolsa.
      */
     public ArrayList<Elemento> getElementosEnLaBolsa() {
-        // TODO - Implementar metodo
-        return null;
+        ArrayList<Elemento> listElementos = new ArrayList<Elemento>();
+        for(String llave: getMapaDeElementos().keySet()){
+            listElementos.add(getMapaDeElementos().get(llave));
+        }
+        return listElementos;
     }
 
     /**
@@ -88,7 +104,15 @@ public class Bolsa {
      * cumplen con el criterio.
      */
     public ArrayList<Elemento> getElementosConPrefijo(String pre) {
-        // TODO - Implementar metodo
+        ArrayList<Elemento> listElementos = new ArrayList<Elemento>();
+        if(pre!="" && pre!=null){
+            for(Elemento elemento: getElementosEnLaBolsa()){
+                if(elemento.getNombre().trim().toLowerCase().startsWith(pre)){
+                    listElementos.add(elemento);
+                }
+            }
+            return listElementos;
+        }
         return null;
     }
 
@@ -100,8 +124,7 @@ public class Bolsa {
      * @return El peso máximo a agregar.
      */
     public int getPesoLibre () {
-        // TODO - Implementar metodo
-        return -1;
+        return PESO_MAXIMO - pesoActual;
     }
 
     /**
@@ -111,7 +134,7 @@ public class Bolsa {
      *   @param peso El peso a quitar/agregar.
      */
     public void addPeso (int peso) {
-        // TODO - Implementar metodo
+        pesoActual = pesoActual + peso;
 
     }
 
