@@ -1,4 +1,8 @@
 package newTp1.rpgcolecciones;
+
+import java.security.Principal;
+import java.util.ArrayList;
+
 /**
  * Esta clase modela un personaje de un juego de rol.
  */
@@ -29,9 +33,12 @@ public class Personaje {
      * @param peso El peso maximo que puede transportar el personaje.
      */
     public Personaje (String nombre, Integer vida, Integer peso) {
-        // TODO - Implementar metodo
-        MAX_VIDA = 0;          // Ojo, esta linea no es valida
-        PESO_MAXIMO_BOLSA = 0; // Ojo, esta linea no es valida
+        if(nombre!=""){
+            this.nombre = nombre;
+        }
+        PESO_MAXIMO_BOLSA = Integer.valueOf(peso.intValue());
+        MAX_VIDA = Integer.valueOf(vida.intValue());
+        this.vida = vida.intValue();
     }
 
     /**
@@ -50,8 +57,19 @@ public class Personaje {
      * @param bolsa La nueva bolsa del personaje.
      */
     public void setBolsa(Bolsa bolsa) {
-        // TODO - Implementar metodo
-
+        if(this.bolsa !=null && bolsa.getPesoMaximo() > this.bolsa.getPesoMaximo() && bolsa.getPesoMaximo() <= PESO_MAXIMO_BOLSA){
+            this.bolsa = bolsa;
+            setElementoEnBolsa(bolsa.getElementosEnLaBolsa());
+        }
+        else {
+            if(bolsa.getPesoMaximo()<=PESO_MAXIMO_BOLSA && this.bolsa == null){
+                this.bolsa = bolsa;
+                setElementoEnBolsa(bolsa.getElementosEnLaBolsa());
+            }
+            else {
+                System.out.println("Bolsa inapropiada");
+            }
+        }
     }
 
     /**
@@ -71,7 +89,15 @@ public class Personaje {
      * para agregar a la bolsa"
      */
     public void guardarElemento() {
-        // TODO - Implementar metodo
+        if (getElemento()==null){
+            System.out.println("No hay elemento para agregar a la bolsa");
+        }
+        else {
+            if(getBolsa().getPesoLibre()>=getElemento().getPeso()){
+                getBolsa().addElemento(getElemento());
+                setElemento(null);
+            }
+        }
 
     }
 
@@ -155,4 +181,9 @@ public class Personaje {
         this.objeto = objeto;
     }
 
+    private void setElementoEnBolsa(ArrayList<Elemento> elementos){
+        for (Elemento elemento : elementos){
+            this.bolsa.addElemento(elemento);
+        }
+    }
 }
