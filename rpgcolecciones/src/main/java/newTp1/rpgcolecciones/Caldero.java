@@ -104,12 +104,15 @@ public class Caldero {
      */
     public List<String> getIngredientesFaltantes () {
         List<String> ingredientesFaltantes = new ArrayList<>();
-        for (String clave: getIngredientes().keySet()){
-            if(getIngredientes().get(clave) == null){
-                ingredientesFaltantes.add(clave);
+        if(getIngredientes().containsValue(null)){
+            for (String clave: getIngredientes().keySet()){
+                if(getIngredientes().get(clave) == null){
+                    ingredientesFaltantes.add(clave);
+                }
             }
+            return ingredientesFaltantes;
         }
-        return ingredientesFaltantes;
+        return null;
     }
 
     /**
@@ -146,10 +149,10 @@ public class Caldero {
     public void prepararPocima () {
         if(getReceta()!=null && verificarIngredientes()){
             Integer peso=0;
-            for (String clave: getIngredientes().keySet()){
-                peso += getIngredientes().get(clave).getPeso();
+            for (Elemento p: getIngredientes().values()){
+                peso += p.getPeso();
             }
-            pocima = new Elemento(getReceta().getNombre(), peso);
+            pocima = new Elemento("Pocima de " + getReceta().getNombre(), peso);
             receta = null;
             getIngredientes().clear();
         }
