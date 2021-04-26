@@ -58,13 +58,15 @@ public class Personaje {
      */
     public void setBolsa(Bolsa bolsa) {
         if(this.bolsa !=null && bolsa.getPesoMaximo() > this.bolsa.getPesoMaximo() && bolsa.getPesoMaximo() <= PESO_MAXIMO_BOLSA){
-            this.bolsa = bolsa;
-            setElementoEnBolsa(bolsa.getElementosEnLaBolsa());
+            for(Elemento elemento: this.bolsa.getElementosEnLaBolsa()){
+                bolsa.addElemento(elemento);
+                //this.bolsa.addElemento(elemento);
+            }
+            this.bolsa  = bolsa;
         }
         else {
             if(bolsa.getPesoMaximo()<=PESO_MAXIMO_BOLSA && this.bolsa == null){
                 this.bolsa = bolsa;
-                setElementoEnBolsa(bolsa.getElementosEnLaBolsa());
             }
             else {
                 System.out.println("Bolsa inapropiada");
@@ -112,8 +114,15 @@ public class Personaje {
      * @param nombre El elemento a tomar de la bolsa.
      */
     public void tomarElemento (String nombre) {
-        // TODO - Implementar metodo
-
+        if(nombre != ""){
+            Elemento elementoEliminado = getBolsa().delElemento(nombre);
+            if(elementoEliminado==null){
+                System.out.println("No se cuenta con el "+nombre);
+            }
+            else{
+                setElemento(elementoEliminado);
+            }
+        }
     }
     
     /**
@@ -149,8 +158,22 @@ public class Personaje {
      * @param receta
      */
     public void prepararReceta (Receta receta) {
-        // TODO - Implementar metodo
-
+        if(receta!=null){
+            getCaldero().setReceta(receta);
+            for(String ingrediente : getCaldero().getIngredientes().keySet()){
+                if(getBolsa().getMapaDeElementos().get(ingrediente)!=null){
+                    getCaldero().addIngrediente(getBolsa().getMapaDeElementos().get(ingrediente));
+                    getBolsa().delElemento(ingrediente);
+                }
+            }
+            if(!getCaldero().verificarIngredientes()){
+                System.out.print("Faltan "+getCaldero().getIngredientesFaltantes().size());
+                System.out.println(" ingredientes para "+ receta.getNombre());
+            }
+            else{
+                getCaldero().prepararPocima();
+            }
+        }
     }
 
     public String getNombre() {
@@ -179,11 +202,5 @@ public class Personaje {
 
     public void setElemento (Elemento objeto) {
         this.objeto = objeto;
-    }
-
-    private void setElementoEnBolsa(ArrayList<Elemento> elementos){
-        for (Elemento elemento : elementos){
-            this.bolsa.addElemento(elemento);
-        }
     }
 }

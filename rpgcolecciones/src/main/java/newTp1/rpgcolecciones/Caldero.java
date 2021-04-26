@@ -71,7 +71,6 @@ public class Caldero {
             }
         }
         else System.out.println(getNombre()+": "+"No se puede agregar "+receta.getNombre());
-
     }
 
     /**
