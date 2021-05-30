@@ -1,3 +1,6 @@
+#subfolders
+Tp1/
+ejemplos/demo
 ##############################
 ## Java
 ##############################
@@ -42,5 +45,3 @@ buildNumber.properties
 *.iml
 .idea/*
 !.idea/runConfigurations/
-#subfolders
-Tp1/
